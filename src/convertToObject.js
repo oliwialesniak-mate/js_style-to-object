@@ -1,19 +1,19 @@
 function convertToObject(cssString) {
   const stylesObject = cssString
     .split(';')
-    .map(decl => decl.trim())          // usuń spacje
-    .filter(Boolean)                   // pomiń puste stringi
+    .map(decl => decl.trim())
+    .filter(Boolean)
     .map(decl => {
       const colonIndex = decl.indexOf(':');
-      if (colonIndex === -1) return null; // pomiń nieprawidłowe deklaracje
+      if (colonIndex === -1) return null;
       const property = decl.slice(0, colonIndex).trim();
       const value = decl.slice(colonIndex + 1).trim();
       return [property, value];
     })
-    .filter(Boolean)                   // usuń null z nieprawidłowych deklaracji
-    .reduce((stylesObject, [property, value]) => {
-      stylesObject[property] = value;
-      return stylesObject;
+    .filter(Boolean)
+    .reduce((acc, [property, value]) => { // <- zmieniona nazwa akumulatora
+      acc[property] = value;
+      return acc;
     }, {});
 
   return stylesObject;
