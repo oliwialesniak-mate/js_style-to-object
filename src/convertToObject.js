@@ -1,22 +1,22 @@
 function convertToObject(cssString) {
-    const result = {};
-    const declarations = cssString.split(';');
+  const stylesObject = cssString
+    .split(';')
+    .map(decl => decl.trim())          // usuń spacje
+    .filter(Boolean)                   // pomiń puste stringi
+    .map(decl => {
+      const colonIndex = decl.indexOf(':');
+      if (colonIndex === -1) return null; // pomiń nieprawidłowe deklaracje
+      const property = decl.slice(0, colonIndex).trim();
+      const value = decl.slice(colonIndex + 1).trim();
+      return [property, value];
+    })
+    .filter(Boolean)                   // usuń null z nieprawidłowych deklaracji
+    .reduce((stylesObject, [property, value]) => {
+      stylesObject[property] = value;
+      return stylesObject;
+    }, {});
 
-    for (let declaration of declarations) {
-        declaration = declaration.trim();
-        if (!declaration) continue;
-        const colonIndex = declaration.indexOf(':');
-        if (colonIndex === -1) continue;
-
-        const property = declaration.slice(0, colonIndex).trim();
-        const value = declaration.slice(colonIndex + 1).trim();
-
-        if (property && value) {
-            result[property] = value;
-        }
-    }
-
-    return result;
+  return stylesObject;
 }
 
 module.exports = convertToObject;
